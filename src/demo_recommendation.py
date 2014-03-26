@@ -12,10 +12,6 @@ if __name__ == "__main__":
 	#=====[ Step 1: construct/load SpotOn object	]=====
 	so = SpotOn ()
 	so.load ()
-
-	#=====[ Step 1.5 (OPTIONAL)	- preprocess activities ]=====
-	path_to_activities_json = '/path/to/json'
-	a_df = so.preprocess.preprocess (path_to_activities_json)
 	
 
 
