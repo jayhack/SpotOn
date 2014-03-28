@@ -8,6 +8,8 @@ from sklearn.cluster import KMeans
 from collections import defaultdict
 from Preprocess import Preprocess
 from util import *
+import time
+import sys
 
 class Inference(object):
 
@@ -73,7 +75,7 @@ class Inference(object):
 
 		# if seen was 0, then none of the words in activity_words has ever been seen, so we should return
 		# the very negative number
-		if seen == 0:
+		if seen < 15:
 			return self.very_negative_number
 		# 3: return the arithmetic average in log space (equivalent to the geometric average in probability space)
 		total = total/seen
@@ -142,8 +144,8 @@ class Inference(object):
 			a list of words representing it. 
 		"""
 		doc = []
-		if activity_row['name']:
-			doc += activity_row['name']
+		# if activity_row['name']:
+		# 	doc += activity_row['name']
 		if activity_row['words']:
 			doc += activity_row['words']
 		return doc
@@ -201,7 +203,7 @@ class Inference(object):
 		weighted_scores = self.recommend (user_rep, recommend_activities)
 
 		# 3: TODO: how should we sort scores? currently returns the indices into "recommend_activites" df
-		return np.argsort(weighted_scores)[::-1]
+		return weighted_scores, recommend_activities
 
 
 	def recommend (self, user_rep, activities_df):
@@ -222,16 +224,26 @@ class Inference(object):
 
 		#1: get user's LDA vector and user's word2vec vector
 		user_lda_vector = user_rep['lda_vec']
+		# print user_rep
+		# print len(activities_df)
+		# sys.exit()
 		# user_w2v_vector = user_row[user_w2v_field]
 
 		#2: create a list of lists, the i'th list being the words in the the i'th activity
 		word_vectors = []
+
 		for i in range(len(activities_df)):
 			word_vectors.append (self.extract_doc_from_activity(activities_df.iloc[i]))
 
 		#3: find probability of generation for each activity
+		# print len(word_vectors)
+		# sys.exit(1)
 		prob_gen = []
 		for i in range(len(word_vectors)):
+			# print "Activity: %s" % word_vectors[i]
+			# score = self.probability_of_generation(user_lda_vector, word_vectors[i])
+			# print "Score: " + str(score)
+			# time.sleep(3)
 			prob_gen.append(self.probability_of_generation(user_lda_vector, word_vectors[i]))
 
 		#4: create a list of lists, the i'th list being the word2vec vector in the i'th activity

@@ -188,11 +188,13 @@ class SpotOn:
 		"""
 		#=====[ Step 1: preprocess user_activities and recommend_activities	]=====
 		user_activities = self.preprocess.preprocess_a (user_activities)
+		# print len(recommend_activities)
 		recommend_activities = self.preprocess.preprocess_a (recommend_activities)
+		# print len(recommend_activities)
 
 		#=====[ Step 2: get scores for each one	]=====
-		scores = self.inference.score_activities (user_activities, recommend_activities)
-		return scores
+		scores,act = self.inference.score_activities (user_activities, recommend_activities)
+		return scores,act
 
 
 	####################################################################################################

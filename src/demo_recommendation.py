@@ -5,6 +5,7 @@
 import json
 from SpotOn import SpotOn
 from util import *
+import numpy as np
 
 if __name__ == "__main__":
 	print_header ("RECOMMENDATION DEMO")
@@ -16,12 +17,12 @@ if __name__ == "__main__":
 
 
 	#=====[ Step 2: get user, activities ]=====
-	all_activities = json.load (open('demo_activities.json', 'r'))
+	all_activities = json.load (open('activities_new.json', 'r'))
 	user = [	
-				all_activities[9], 
-				all_activities[16], 
-				all_activities[21], 
-				all_activities[37]
+				all_activities[94], 
+				all_activities[196], 
+				all_activities[101], 
+				all_activities[365]
 			]
 	activities = all_activities
 
@@ -34,12 +35,17 @@ if __name__ == "__main__":
 	print "\n\n\n"
 
 	#=====[ Step 3: get/display scores for activities	]=====
-	scored_activities = so.score_activities (user, activities)
-	sorted_activities = sorted(zip(activities, scored_activities), key=lambda x: x[1])
+	scored_activities,act = so.score_activities (user, activities)
+	sorted_act = np.argsort(scored_activities)[::-1]
+	# sorted_activities = sorted(zip(activities, scored_activities), key=lambda x: x[1], reverse=True)
 	print_header ("ACTIVITY RECOMMENDATIONS: ")
-	for activity, score in sorted_activities:
-		print score, ": ", activity['_source']['name'], " | ", activity['_source']['description']
-		print '\n', '=' * 40, '\n'
+	for i in range(5):
+		activity_index = sorted_act[i]
+		print i, ": ", act.iloc[activity_index]
+		print '\n', '='*40, '\n'
+	# for activity, score in sorted_activities:
+		# print score, ": ", activity['_source']['name'], " | ", activity['_source']['description']
+		# print '\n', '=' * 40, '\n'
 
 
 
